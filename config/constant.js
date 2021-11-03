@@ -1,6 +1,6 @@
 const ValidInfoContact = {
-  MIN_SYMBOL: 1,
-  MAX_SYMBOL: 40,
+  MIN_SYMBOLS: 1,
+  MAX_SYMBOLS: 40,
 };
 
 module.exports = {

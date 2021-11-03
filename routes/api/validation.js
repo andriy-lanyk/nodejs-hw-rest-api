@@ -17,7 +17,7 @@ const schemaStatusContact = Joi.object({
 });
 
 const schemaId = Joi.object({
-  id: Joi.objectId().required(),
+  contactId: Joi.objectId().required(),
 });
 
 const validate = async (schema, obj, res, next) => {
