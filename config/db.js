@@ -9,11 +9,11 @@ const db = mongoose.connect(uri, {
 });
 
 mongoose.connection.on('connected', () => {
-  console.log('Mangoose connection to DB');
+  console.log('Mongoose connection to DB');
 });
 
 mongoose.connection.on('error', (err) => {
-  console.log(`Mangoose connection error ${err.message}`);
+  console.log(`Mongoose connection error ${err.message}`);
 });
 
 // disconnected code
