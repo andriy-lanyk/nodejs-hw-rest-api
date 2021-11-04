@@ -15,7 +15,7 @@ const {
 const guard = require('../../helpers/guard');
 const loginLimit = require('../../helpers/rate-limit-login');
 
-router.post('/registration', validateUserRegistration, registration);
+router.post('/signup', validateUserRegistration, registration);
 
 router.post('/login', loginLimit, validateUserLogin, login);
 
