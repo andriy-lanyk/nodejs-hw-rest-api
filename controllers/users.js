@@ -1,5 +1,10 @@
 const jwt = require('jsonwebtoken');
+// const fs = require('fs/promises');
+const path = require('path');
+const mkdirp = require('mkdirp');
 const Users = require('../repository/users');
+const UploadService = require('../services/file-upload');
+// const UploadService = require('../services/cloud-upload');
 const { HttpCode } = require('../config/constants');
 require('dotenv').config();
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
@@ -23,6 +28,7 @@ const registration = async (req, res, next) => {
         id: newUser.id,
         email: newUser.email,
         subscription: newUser.subscription,
+        avatar: newUser.avatar,
       },
     });
   } catch (error) {
@@ -33,7 +39,7 @@ const registration = async (req, res, next) => {
 const login = async (req, res, _next) => {
   const { email, password } = req.body;
   const user = await Users.findByEmail(email);
-  const isValidPassword = await user.isValidPassword(password);
+  const isValidPassword = await user?.isValidPassword(password);
   if (!user || !isValidPassword) {
     return res.status(HttpCode.UNAUTHORIZED).json({
       status: 'error',
@@ -101,10 +107,58 @@ const updateSubscription = async (req, res, next) => {
   }
 };
 
+const uploadAvatar = async (req, res, next) => {
+  const id = String(req.user._id);
+  const file = req.file;
+  const AVATAR_OF_USERS = process.env.AVATAR_OF_USERS;
+  const destination = path.join(AVATAR_OF_USERS, id);
+  await mkdirp(destination);
+
+  const uploadService = new UploadService(destination);
+  const avatarUrl = await uploadService.save(file, id);
+  await Users.updateAvatar(id, avatarUrl);
+
+  return res.status(HttpCode.OK).json({
+    status: 'success',
+    code: HttpCode.OK,
+    data: {
+      avatar: avatarUrl,
+    },
+  });
+};
+
+// Cloud storage
+// const uploadAvatar = async (req, res, next) => {
+//   const { id, idUserCloud } = req.user
+//   const file = req.file
+
+//   const destination = 'Avatars'
+//   const uploadService = new UploadService(destination)
+//   const { avatarUrl, returnIdUserCloud } = await uploadService.save(
+//     file.path,
+//     idUserCloud,
+//   )
+
+//   await Users.updateAvatar(id, avatarUrl, returnIdUserCloud)
+//   try {
+//     await fs.unlink(file.path)
+//   } catch (error) {
+//     console.log(error.message)
+//   }
+//   return res.status(HttpCode.OK).json({
+//     status: 'success',
+//     code: HttpCode.OK,
+//     date: {
+//       avatar: avatarUrl,
+//     },
+//   })
+// }
+
 module.exports = {
   registration,
   login,
   logout,
   currentUser,
   updateSubscription,
+  uploadAvatar,
 };
