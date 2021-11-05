@@ -1,5 +1,5 @@
 const Jimp = require('jimp');
-const fs = require('fs/hpromises');
+const fs = require('fs/promises');
 const path = require('path');
 
 class UploadFileAvatar {
