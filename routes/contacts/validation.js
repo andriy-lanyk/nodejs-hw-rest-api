@@ -1,6 +1,7 @@
 const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 const { ValidInfoContact } = require('../../config/constants');
+const { HttpCode } = require('../../config/constants');
 
 const schemaContact = Joi.object({
   name: Joi.string()
@@ -25,9 +26,9 @@ const validate = async (schema, obj, res, next) => {
     await schema.validateAsync(obj);
     next();
   } catch (error) {
-    res.status(400).json({
+    res.status(HttpCode.BAD_REQUEST).json({
       status: 'error',
-      code: 400,
+      code: HttpCode.BAD_REQUEST,
       message: `Field ${error.message.replace(/"/g, '')}`,
     });
   }

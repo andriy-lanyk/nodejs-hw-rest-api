@@ -17,6 +17,7 @@ const guard = require('../../helpers/guard');
 const role = require('../../helpers/role');
 const wrapError = require('../../helpers/errorHandler');
 const { Subscription } = require('../../config/constants');
+const { HttpCode } = require('../../config/constants');
 
 router.get('/', guard, wrapError(getContacts));
 
@@ -27,7 +28,7 @@ router.get(
   wrapError((_req, res, _next) => {
     res.json({
       status: 'success',
-      code: 200,
+      code: HttpCode.OK,
       data: { message: 'Only for pro' },
     });
   })

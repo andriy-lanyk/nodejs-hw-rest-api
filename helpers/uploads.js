@@ -2,6 +2,7 @@ const multer = require('multer');
 require('dotenv').config();
 const { CustomError } = require('./customError');
 const UPLOAD_DIR = process.env.UPLOAD_DIR;
+const { HttpCode } = require('../config/constants');
 
 const storage = multer.diskStorage({
   destination: function (_req, _file, cb) {
@@ -20,7 +21,7 @@ const upload = multer({
       return cb(null, true);
     }
 
-    cb(new CustomError(400, 'Wrong format for avatar'));
+    cb(new CustomError(HttpCode.BAD_REQUEST, 'Wrong format for avatar'));
   },
 });
 

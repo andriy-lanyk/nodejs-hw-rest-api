@@ -5,6 +5,7 @@ const boolParser = require('express-query-boolean');
 const helmet = require('helmet');
 require('dotenv').config();
 const AVATAR_OF_USERS = process.env.AVATAR_OF_USERS;
+const { HttpCode } = require('./config/constants');
 
 const contactsRouter = require('./routes/contacts');
 const usersRouter = require('./routes/users');
@@ -29,13 +30,15 @@ app.use('/api/users', usersRouter);
 app.use('/api/contacts', contactsRouter);
 
 app.use((_req, res) => {
-  res.status(404).json({ status: 'error', code: 404, message: 'Not found' });
+  res
+    .status(HttpCode.NOT_FOUND)
+    .json({ status: 'error', code: HttpCode.NOT_FOUND, message: 'Not found' });
 });
 
 app.use((err, _req, res, _next) => {
-  const statusCode = err.status || 500;
+  const statusCode = err.status || HttpCode.INTERNAL_SERVER_ERROR;
   res.status(statusCode).json({
-    status: statusCode === 500 ? 'fail' : 'error',
+    status: statusCode === HttpCode.INTERNAL_SERVER_ERROR ? 'fail' : 'error',
     code: statusCode,
     message: err.message,
   });
