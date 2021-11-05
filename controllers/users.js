@@ -107,7 +107,7 @@ const updateSubscription = async (req, res, next) => {
   }
 };
 
-const uploadAvatar = async (req, res, next) => {
+const uploadAvatar = async (req, res, _next) => {
   const id = String(req.user._id);
   const file = req.file;
   const AVATAR_OF_USERS = process.env.AVATAR_OF_USERS;
