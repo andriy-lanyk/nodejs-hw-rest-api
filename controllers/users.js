@@ -167,6 +167,7 @@ const repeatEmailForVerifyUser = async (req, res, _next) => {
       new CreateSenderNodemailer()
     );
     const statusEmail = await emailService.sendVerifyEmail(email, verifyToken);
+    console.log('statusEmail: ', statusEmail);
   }
   return res.status(HttpCode.OK).json({
     status: 'success',
