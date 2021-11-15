@@ -27,6 +27,7 @@ const registration = async (req, res, next) => {
   }
   try {
     const newUser = await Users.create({ email, password, subscription });
+    console.log('newUser: ', newUser);
     const emailService = new EmailService(
       process.env.NODE_ENV,
       new CreateSenderSendGrid()
@@ -55,7 +56,8 @@ const login = async (req, res, _next) => {
   const { email, password } = req.body;
   const user = await Users.findByEmail(email);
   const isValidPassword = await user?.isValidPassword(password);
-  if (!user || !isValidPassword || !user?.verify) {
+  if (!user || !isValidPassword) {
+    //Should be else ||!user?.verify
     return res.status(HttpCode.UNAUTHORIZED).json({
       status: 'error',
       code: HttpCode.UNAUTHORIZED,
@@ -77,6 +79,7 @@ const login = async (req, res, _next) => {
 
 const logout = async (req, res, _next) => {
   const id = req.user._id;
+  console.log('id: ', id);
   await Users.updateToken(id, null);
   return res.status(HttpCode.NO_CONTENT).json({ test: 'test' });
 };
